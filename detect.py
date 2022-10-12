@@ -125,7 +125,7 @@ def detect(save_img=False):
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         with open(txt_path + '.txt', 'a') as f:
-                            f.write(('%g ' * 5 + '\n') % (cls, *xywh))  # label format
+                            f.write(('%g ' * 5 + '\n') % (pid, *xywh))  # label format
 
                     if save_img or view_img:  # Add bbox to image
                         #if int(cls)==0: #change by miao   plot only person in image
@@ -133,7 +133,7 @@ def detect(save_img=False):
                         label = '%d' % (pid)
                         if label not in trajectory:
                             trajectory[label] = []
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(label)%32], line_thickness=2)
+                        plot_one_box(xyxy, im0, label=label, color=colors[int(label)%32], line_thickness=1)
                         height, width, _ = im0.shape
                         x1, y1, x2, y2 = max(0,int(xyxy[0])), max(0,int(xyxy[1])), min(width,int(xyxy[2])), min(height,int(xyxy[3]))
                         center = (int((x1 + x2)/2), int((y1 + y2)/2))
@@ -143,6 +143,7 @@ def detect(save_img=False):
                                 continue
                             cv2.line(im0, trajectory[label][i - 1], trajectory[label][i], colors[int(label)%32], 1)
                         bbox_img = im0[y1:y2,x1:x2]
+                        print(trajectory[label])
                             # print(type(bbox_img))
                         shortname, extension = os.path.splitext(Path(p).name)
                         person_count += 1
